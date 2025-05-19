@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { router } from "expo-router";
-import { useUser } from "./context/UserContext";
+import { useUser } from "../context/UserContext";
 
 export default function Index() {
   const { user, cargando } = useUser();
