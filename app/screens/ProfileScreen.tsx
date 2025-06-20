@@ -8,11 +8,9 @@ import {
   Alert,
 } from 'react-native'
 import { useUser } from '../context/UserContext'
-import { useTheme } from '../context/ThemeContext'
 
 const ProfileScreen = () => {
   const { user, cargando, logout } = useUser()
-  const { isDark, toggle } = useTheme()
 
   const handleLogout = async () => {
     try {
@@ -51,13 +49,7 @@ const ProfileScreen = () => {
 
       <Text style={styles.label}>Correo:</Text>
       <Text style={styles.value}>{user.email}</Text>
-      <View style={styles.themeButton}>
-        <Button
-          title={`Cambiar a modo ${isDark ? 'claro' : 'oscuro'}`}
-          onPress={toggle}
-          color={isDark ? '#aaa' : '#333'}
-        />
-      </View>
+      
 
       <View style={styles.logoutButton}>
         <Button title='Cerrar sesión' onPress={handleLogout} color='#cc0000' />

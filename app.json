@@ -14,6 +14,11 @@
     },
     "android": {
       "useNextNotificationsApi": true,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDyaWyXyPCeIHSGUcTYOmBdQ_41gEZIkhE"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -37,13 +42,6 @@
         }
       ],
       ["expo-notifications"],
-      [
-        "react-native-google-mobile-ads",
-        {
-          "androidAppId": "ca-app-pub-2485179883647057~1875872185",
-          "iosAppId": "ca-app-pub-2485179883647057~1040921794"
-        }
-      ],
       [
         "expo-build-properties",
         {

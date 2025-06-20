@@ -7,6 +7,7 @@ import MapScreen from '../../screens/MapScreen'
 import ChatScreen from '../../screens/ChatScreen'
 import ReportScreen from '../../screens/ReportScreen'
 import ProfileScreen from '../../screens/ProfileScreen'
+import HelpCenterScreen from '@/app/screens/HelpCenterScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -25,6 +26,8 @@ const BottomNavbar = () => {
             iconName = 'report'
           } else if (route.name === 'Perfil') {
             iconName = 'person'
+          } else if (route.name === 'Centro de Ayuda') {
+            iconName = 'info'
           }
 
           return <Icon name={iconName} size={size} color={color} />
@@ -34,10 +37,11 @@ const BottomNavbar = () => {
         tabBarShowLabel: false, // Oculta las etiquetas de texto
       })}
     >
-      <Tab.Screen name='Mapa' component={MapScreen} />
-      <Tab.Screen name='Chat' component={ChatScreen} />
-      <Tab.Screen name='Reportar' component={ReportScreen} />
-      <Tab.Screen name='Perfil' component={ProfileScreen} />
+      <Tab.Screen name='Mapa' component={MapScreen} options={{headerShown: false}}/>
+      <Tab.Screen name='Chat' component={ChatScreen} options={{headerShown: false}}/>
+      <Tab.Screen name='Reportar' component={ReportScreen} options={{headerShown: false}}/>
+      <Tab.Screen name='Perfil' component={ProfileScreen} options={{headerShown: false}}/>
+      <Tab.Screen name='Centro de Ayuda' component={HelpCenterScreen} options={{headerShown: false}} />
     </Tab.Navigator>
   )
 }

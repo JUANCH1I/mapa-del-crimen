@@ -12,7 +12,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { auth, db } from '../config/firebaseConfig'
-import { doc, getDoc, setDoc, onSnapshot, collectionGroup } from 'firebase/firestore'
+import { doc, getDoc, setDoc, onSnapshot, collectionGroup, collection, query, orderBy } from 'firebase/firestore'
 import { router } from 'expo-router'
 import * as Notifications from 'expo-notifications'
 
@@ -48,30 +48,30 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
-    const unsuscribe = onSnapshot(
-      collectionGroup(db, "mensajes"), // 🔁 escucha todos los mensajes de todos los chats
-      (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            const mensaje = change.doc.data()
-  
-            if (mensaje.tipo === "panico") {
-              Notifications.scheduleNotificationAsync({
-                content: {
-                  title: "🚨 Emergencia en tu zona",
-                  body: mensaje.text || "Nuevo mensaje de emergencia",
-                  sound: "default",
-                },
-                trigger: null,
-              })
-            }
-          }
+  if (!user?.zona) return;
+
+  const ref = collection(db, 'chats', user.zona, 'mensajes')
+  const q = query(ref, orderBy('createdAt', 'desc'))
+
+  const unsuscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      const mensaje = change.doc.data()
+      if (change.type === 'added' && mensaje.tipo === 'panico') {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "🚨 Emergencia en tu zona",
+            body: mensaje.text || "Nuevo mensaje de emergencia",
+            sound: "default",
+          },
+          trigger: null,
         })
       }
-    )
-  
-    return () => unsuscribe()
-  }, [])
+    })
+  })
+
+  return () => unsuscribe()
+}, [user?.zona])
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (usuarioFirebase) => {

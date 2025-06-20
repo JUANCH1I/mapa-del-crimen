@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat, IMessage, InputToolbar } from 'react-native-gifted-chat'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { db } from '../config/firebaseConfig'
 import {
   collection,
@@ -11,11 +11,11 @@ import {
 } from 'firebase/firestore'
 import PanicFAB from '../components/PanicFab'
 import { useUser } from '../context/UserContext'
-import { useTheme } from '../context/ThemeContext'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Entypo from '@expo/vector-icons/Entypo'
 
 const ChatScreen: React.FC = () => {
   const { user } = useUser()
-  const { theme, isDark } = useTheme()
   const [messages, setMessages] = useState<IMessage[]>([])
   const zona = user?.zona || 'zona_default' // Cambia esto dinámicamente si querés usar otras zonas
   const currentUser = {
@@ -56,27 +56,53 @@ const ChatScreen: React.FC = () => {
   )
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <GiftedChat messages={messages} onSend={onSend} user={currentUser} renderInputToolbar={(props) => (
-    <InputToolbar
-      {...props}
-      containerStyle={{
-        backgroundColor: isDark ? '#1e1e1e' : '#f0f0f0',
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
-      }}
-    />
-  )}  />
-      {user && (
-        <PanicFAB zona={user.zona} user={{ id: user.uid, name: user.nombre }} />
-      )}
-    </View>
+    <>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Chat</Text>
+        <Entypo name='chat' size={24} color='#fff' />
+      </View>
+      <View style={[styles.container]}>
+        <GiftedChat
+          messages={messages}
+          onSend={onSend}
+          user={currentUser}
+          renderInputToolbar={(props) => (
+            <InputToolbar
+              {...props}
+              containerStyle={{
+                borderTopWidth: 1,
+                borderTopColor: '#ccc',
+              }}
+            />
+          )}
+        />
+        {user && (
+          <PanicFAB
+            zona={user.zona}
+            user={{ id: user.uid, name: user.nombre }}
+          />
+        )}
+      </View>
+    </>
   )
 }
 
 export default ChatScreen
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#3498db',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   container: {
     flex: 1,
   },
